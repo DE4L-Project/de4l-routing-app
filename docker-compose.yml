@@ -1,0 +1,23 @@
+version: "2"
+volumes:
+  osrm-data-volume:
+services:
+  routing-backend:
+    image: de4l-routing-backend:latest
+    volumes:
+      - osrm-data-volume:/data
+    ports:
+      - "15000:5000"
+      - "15001:5001"
+  routing-frontend-pollution:
+    image: de4l-routing-frontend:latest
+    ports:
+      - "15002:9966"
+    environment:
+      - OSRM_BACKEND=http://localhost:15000/route/v1
+  routing-frontend-shortest:
+    image: de4l-routing-frontend:latest
+    ports:
+      - "15003:9966"
+    environment:
+      - OSRM_BACKEND=http://localhost:15001/route/v1
