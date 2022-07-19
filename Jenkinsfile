@@ -12,6 +12,19 @@ node('master') {
         sh "sudo docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD} ${REPO_URL}"
     }
 
+    stage('Download sensor data') {
+        SENSOR_DATA_REPO_URL="https://devdocker.wifa.uni-leipzig.de:8100/IWI-DEV/de4l-routing-app-data/raw/master"
+        BIKENET_FILENAME="leipzig_bikenet.json"
+        POLLUTION_DATA_FILENAME="all_data_pollution.json"
+        dir("./backend/Bike_Pollution") {
+            sh "rm -rf leipzig_bikenet.json all_data_pollution.json"
+            withCredentials([string(credentialsId: 'jenkins-gogs-base64', variable: 'GOGS_CREDENTIALS')]) {
+                sh "wget --header \"Authorization: Basic ${GOGS_CREDENTIALS}\" \"${SENSOR_DATA_REPO_URL}/${BIKENET_FILENAME}\""
+                sh "wget --header \"Authorization: Basic ${GOGS_CREDENTIALS}\" \"${SENSOR_DATA_REPO_URL}/${POLLUTION_DATA_FILENAME}\""
+            }
+        }
+    }
+
     stage('Build backend') {
         echo "Building backend: ${BUILD}"
         dir("backend") {
