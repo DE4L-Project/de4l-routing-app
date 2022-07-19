@@ -1,0 +1,38 @@
+version: "2"
+volumes:
+  de4l-osrm-data-volume-data:
+services:
+  de4l-routing-backend:
+    image: devdocker.wifa.uni-leipzig.de:5000/de4l/de4l-routing-backend:latest
+    volumes_from:
+      - de4l-osrm-data-volume
+    labels:
+      project: de4l
+      io.rancher.sidekicks: de4l-osrm-data-volume
+      io.rancher.container.pull_image: always
+  de4l-osrm-data-volume:
+    image: rawmind/alpine-volume:0.0.2-1
+    environment:
+      SERVICE_GID: '1000'
+      SERVICE_UID: '1000'
+      SERVICE_VOLUME: /data
+    stdin_open: true
+    volumes:
+      - de4l-osrm-data-volume-data:/data
+    tty: true
+    labels:
+      project: de4l
+      io.rancher.container.pull_image: always
+      io.rancher.container.start_once: 'true'
+  de4l-routing-frontend-pollution:
+    image: devdocker.wifa.uni-leipzig.de:5000/de4l/de4l-routing-frontend:latest
+    environment:
+      - OSRM_BACKEND=http://localhost:15000/route/v1
+    labels:
+      project: de4l
+  de4l-routing-frontend-shortest:
+    image: devdocker.wifa.uni-leipzig.de:5000/de4l/de4l-routing-frontend:latest
+    environment:
+      - OSRM_BACKEND=http://localhost:15001/route/v1
+    labels:
+      project: de4l

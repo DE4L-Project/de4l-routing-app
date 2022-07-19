@@ -19,8 +19,8 @@ node('master') {
         dir("./backend/Bike_Pollution") {
             sh "rm -rf leipzig_bikenet.json all_data_pollution.json"
             withCredentials([string(credentialsId: 'jenkins-gogs-base64', variable: 'GOGS_CREDENTIALS')]) {
-                sh "wget --header \"Authorization: Basic ${GOGS_CREDENTIALS}\" \"${SENSOR_DATA_REPO_URL}/${BIKENET_FILENAME}\""
-                sh "wget --header \"Authorization: Basic ${GOGS_CREDENTIALS}\" \"${SENSOR_DATA_REPO_URL}/${POLLUTION_DATA_FILENAME}\""
+                sh "wget --header \"Authorization: Basic $GOGS_CREDENTIALS\" \"${SENSOR_DATA_REPO_URL}/${BIKENET_FILENAME}\""
+                sh "wget --header \"Authorization: Basic $GOGS_CREDENTIALS\" \"${SENSOR_DATA_REPO_URL}/${POLLUTION_DATA_FILENAME}\""
             }
         }
     }
