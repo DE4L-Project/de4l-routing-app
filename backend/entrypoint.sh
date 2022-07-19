@@ -5,7 +5,7 @@ OSM_FILENAME=Leipzig
 mkdir -p /usr/local/share/lua/5.2/
 ln -sf /opt/* /usr/local/share/lua/5.2
 
-cp -Rfa /tmp/data/. /data/
+mv -r /tmp/data/. /data/
 
 mkdir -p /data/pollution-profile
 mkdir -p /data/shortest-profile
